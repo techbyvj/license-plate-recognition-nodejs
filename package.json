@@ -1,0 +1,42 @@
+{
+  "name": "license-plate-recognizer",
+  "version": "1.0.0",
+  "description": "A Node.js package for license plate recognition using OpenCV and OCR",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": ["license plate", "recognition", "opencv", "ocr", "image processing"],
+  "author": "Your Name",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/techbyvj/license-plate-recognition-nodejs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/techbyvj/license-plate-recognition-nodejs/issues"
+  },
+  "homepage": "https://github.com/techbyvj/license-plate-recognition-nodejs#readme",
+  "devDependencies": {
+    "@types/node": "^22.7.4",
+    "typescript": "^5.6.2"
+  },
+  "dependencies": {
+    "@u4/opencv4nodejs": "^7.1.2",
+    "jimp": "^1.6.0",
+    "node-tesseract-ocr": "^2.2.1",
+    "winston": "^3.14.2"
+  },
+  "opencv4nodejs": {
+    "disableAutoBuild": "1"
+  }
+}
