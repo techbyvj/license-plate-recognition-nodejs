@@ -16,8 +16,6 @@ const logger: Logger = createLogger({
   transports: [new transports.Console()]
 });
 
-// ... existing code ...
-
 export async function processLicensePlate(image: cv.Mat): Promise<[cv.Mat | null, string | null]> {
   const licensePlate: cv.Mat | null = detectLicensePlate(image);
   if (!licensePlate) {
@@ -84,7 +82,7 @@ function detectLicensePlate(image: cv.Mat): cv.Mat | null {
   // Find license plate contour
   for (const contour of contours.slice(0, 10)) {
     const perimeter: number = contour.arcLength(true);
-    const approx: cv.Contour = contour.approxPolyDP(0.02 * perimeter, true);
+    const approx: cv.Point2[] = contour.approxPolyDP(0.02 * perimeter, true);
     if (approx.length >= 4 && approx.length <= 8) {
       const rect: cv.Rect = contour.boundingRect();
       const aspectRatio: number = rect.width / rect.height;
@@ -100,14 +98,15 @@ function detectLicensePlate(image: cv.Mat): cv.Mat | null {
 
 async function recognizeText(image: cv.Mat): Promise<string> {
   // Try Tesseract OCR first
-  const config: tesseract.RecognizeOptions = {
+  const config: tesseract.Config = {
     psm: 7,
     oem: 3,
     tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
   };
 
   try {
-    const text: string = await tesseract.recognize(image, config);
+    const buffer = cv.imencode('.png', image);
+    const text: string = await tesseract.recognize(buffer, config);
     if (text.trim()) {
       logger.info(`Text recognized by Tesseract OCR: ${text.trim()}`);
       return text.trim();

@@ -15,7 +15,13 @@
     "start": "node dist/index.js",
     "prepublishOnly": "npm run build"
   },
-  "keywords": ["license plate", "recognition", "opencv", "ocr", "image processing"],
+  "keywords": [
+    "license plate",
+    "recognition",
+    "opencv",
+    "ocr",
+    "image processing"
+  ],
   "author": "Your Name",
   "license": "ISC",
   "repository": {
