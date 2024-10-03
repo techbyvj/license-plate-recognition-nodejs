@@ -93,3 +93,7 @@ This project is licensed under the ISC License.
 ## Issues
 
 If you encounter any problems or have suggestions, please file an issue on the [GitHub repository](https://github.com/techbyvj/license-plate-recognition-nodejs/issues).
+
+## Connect
+
+Follow the author on X (Twitter): [@saidbyvj](https://x.com/saidbyvj)

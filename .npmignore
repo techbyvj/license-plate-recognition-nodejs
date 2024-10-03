@@ -75,3 +75,8 @@ output/
 
 # Include specific files
 !dist/
+
+
+# Example project
+
+example/
