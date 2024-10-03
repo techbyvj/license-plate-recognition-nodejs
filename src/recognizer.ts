@@ -3,6 +3,8 @@ import * as path from 'path';
 import { createLogger, format, transports, Logger } from 'winston';
 import * as cv from '@u4/opencv4nodejs';
 import * as tesseract from 'node-tesseract-ocr';
+import { EasyOCR } from 'node-easyocr';
+import * as os from 'os';
 
 // Set up logging
 const logger: Logger = createLogger({
@@ -98,7 +100,7 @@ function detectLicensePlate(image: cv.Mat): cv.Mat | null {
 
 async function recognizeText(image: cv.Mat): Promise<string> {
   // Try Tesseract OCR first
-  const config: tesseract.Config = {
+  const tesseractConfig: tesseract.Config = {
     psm: 7,
     oem: 3,
     tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
@@ -106,7 +108,7 @@ async function recognizeText(image: cv.Mat): Promise<string> {
 
   try {
     const buffer = cv.imencode('.png', image);
-    const text: string = await tesseract.recognize(buffer, config);
+    const text: string = await tesseract.recognize(buffer, tesseractConfig);
     if (text.trim()) {
       logger.info(`Text recognized by Tesseract OCR: ${text.trim()}`);
       return text.trim();
@@ -114,22 +116,30 @@ async function recognizeText(image: cv.Mat): Promise<string> {
   } catch (error: any) {
     logger.error(`Tesseract OCR error: ${error.message}`);
   }
+  
+  // If Tesseract fails, try EasyOCR
+  try {
+    const buffer = cv.imencode('.png', image);
+    const tempImagePath = path.join(os.tmpdir(), `temp_${Date.now()}.png`);
+    fs.writeFileSync(tempImagePath, buffer);
 
-  // If Tesseract fails, try EasyOCR (Note: You may need to find a Node.js compatible OCR library)
-//   logger.info("Tesseract OCR failed to recognize text, switching to EasyOCR");
-//   try {
-//     const reader = await easyocr.load(['en']);
-//     const results = await reader.readtext(image);
-//     const text = results.map(result => result[1]).join('');
-//     if (text) {
-//       logger.info(`Text recognized by EasyOCR: ${text}`);
-//       return text.trim();
-//     }
-//   } catch (error) {
-//     logger.error(`EasyOCR error: ${error.message}`);
-//   }
+    const ocr = new EasyOCR();
+    await ocr.init(['en']);
+    
+    const result = await ocr.readText(tempImagePath);
+    await ocr.close();
 
-//   logger.warn("Both Tesseract and EasyOCR failed to recognize text");
+    fs.unlinkSync(tempImagePath);
+    
+    if (result && result.length > 0) {
+      const text = result.map((item: { text: any; }) => item.text).join(' ').trim();
+      logger.info(`Text recognized by EasyOCR: ${text}`);
+      return text;
+    }
+  } catch (error: any) {
+    logger.error(`EasyOCR error: ${error.message}`);
+  }
+
   return '';
 }
 

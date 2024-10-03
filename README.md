@@ -4,12 +4,12 @@ A Node.js package for license plate recognition using OpenCV and OCR.
 
 ## Description
 
-This package provides a robust solution for recognizing license plates in images. It uses computer vision techniques with OpenCV for plate detection and Optical Character Recognition (OCR) for text extraction.
+This package provides a robust solution for recognizing license plates in images. It uses computer vision techniques with OpenCV for plate detection and multiple OCR engines for text extraction.
 
 ## Features
 
 - License plate detection in images
-- Text recognition from detected license plates
+- Text recognition from detected license plates using multiple OCR engines (Tesseract and EasyOCR)
 - Logging of recognition process
 - Saving of original and processed images
 
@@ -20,6 +20,12 @@ To install the package, run:
 ```bash
 npm install license-plate-recognizer
 ```
+
+## Prerequisites
+
+- Node.js (version 12 or higher recommended)
+- OpenCV (automatically installed via @u4/opencv4nodejs)
+- Tesseract OCR (must be installed separately on your system)
 
 ## Usage
 
@@ -56,10 +62,11 @@ Processes an image and attempts to recognize a license plate.
 This package relies on the following main dependencies:
 
 - [@u4/opencv4nodejs](https://www.npmjs.com/package/@u4/opencv4nodejs): For image processing and computer vision tasks.
-- [node-tesseract-ocr](https://www.npmjs.com/package/node-tesseract-ocr): For Optical Character Recognition.
+- [node-tesseract-ocr](https://www.npmjs.com/package/node-tesseract-ocr): For Optical Character Recognition using Tesseract.
+- [node-easyocr](https://www.npmjs.com/package/node-easyocr): For Optical Character Recognition using EasyOCR.
 - [winston](https://www.npmjs.com/package/winston): For logging.
 
-Make sure to install Tesseract OCR on your system for text recognition to work properly.
+Make sure to install Tesseract OCR on your system for text recognition to work properly. EasyOCR is included as a fallback OCR engine.
 
 ## Output
 
